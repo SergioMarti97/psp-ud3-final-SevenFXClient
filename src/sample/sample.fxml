@@ -1,8 +1,29 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="sample.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-</GridPane>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <HBox layoutX="60.0" layoutY="52.0" prefHeight="3.0" prefWidth="560.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <HBox prefHeight="27.0" prefWidth="274.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="56.0" prefWidth="99.0" text="Server Address:" />
+                  <TextField fx:id="txtFieldAddress" prefHeight="27.0" prefWidth="159.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="27.0" prefWidth="166.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="33.0" text="Port:" />
+                  <TextField fx:id="txtFieldPort" prefHeight="27.0" prefWidth="89.0" />
+               </children>
+            </HBox>
+            <Button fx:id="btnConnectOrDisconnect" mnemonicParsing="false" onAction="#handleConnectOrDisconnect" text="Connect" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
