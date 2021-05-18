@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.application.Platform;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,9 +41,10 @@ public class BackgroundThread extends Thread {
                 String message = objectInputStream.readUTF();
                 listener.onReceiveMessage(message);
             }
-            listener.onDisconnectServer();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            Platform.runLater(() -> listener.onDisconnectServer());
         }
     }
 
@@ -50,9 +53,10 @@ public class BackgroundThread extends Thread {
         objectOutputStream.flush();
     }
 
-    public void doStop() {
-        this.keepRunning = false;
-        this.listener.onDisconnectServer();
+    public void doStop() throws IOException {
+        objectOutputStream.writeUTF("disconnect");
+        objectOutputStream.flush();
+        keepRunning = false;
     }
 
     public boolean isKeepRunning() {

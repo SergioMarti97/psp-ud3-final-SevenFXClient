@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
@@ -23,6 +27,38 @@
                </children>
             </HBox>
             <Button fx:id="btnConnectOrDisconnect" mnemonicParsing="false" onAction="#handleConnectOrDisconnect" text="Connect" />
+         </children>
+      </HBox>
+      <HBox fx:id="gameBox" alignment="CENTER" layoutX="73.0" layoutY="76.0" prefHeight="268.0" prefWidth="600.0" spacing="100.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+               <children>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Receive more cards" textAlignment="CENTER" wrapText="true" />
+                  <Button alignment="CENTER" maxWidth="100.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Stand up" textAlignment="CENTER" />
+               </children>
+               <HBox.margin>
+                  <Insets bottom="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="268.0" prefWidth="300.0" spacing="20.0">
+               <children>
+                  <ListView prefHeight="230.0" prefWidth="180.0" />
+                  <HBox prefHeight="0.0" prefWidth="180.0" spacing="10.0">
+                     <children>
+                        <Label text="Total">
+                           <font>
+                              <Font name="Arial Bold" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label text="0">
+                           <font>
+                              <Font name="Arial" size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
       </HBox>
    </children>
