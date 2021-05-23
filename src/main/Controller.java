@@ -60,8 +60,8 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
     }
 
     @FXML
-    void handleStandUp() {
-
+    void handleStandUp() throws IOException {
+        backgroundThread.standUp();
     }
 
     @Override
@@ -89,13 +89,31 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
         lbTextStatus.setText(null);
         lbTextStatus.setDisable(true);
         lbTextStatus.setVisible(false);
+
+        listCards.getItems().clear();
+        lbTotalPoints.setText("0");
     }
 
     @Override
     public void onReceiveCard(Card card) {
-        listCards.getItems().add(card);
-        float points = Float.parseFloat(lbTotalPoints.getText()) + card.getSymbol().getPoints();
-        lbTotalPoints.setText(String.valueOf(points));
+        try {
+            listCards.getItems().add(card);
+            float points = Float.parseFloat(lbTotalPoints.getText()) + card.getSymbol().getPoints();
+            lbTotalPoints.setText(String.valueOf(points));
+
+            if (points == 7.5) {
+                backgroundThread.standUp();
+                lbTextStatus.setText("Waiting for the players to finish...");
+            } else if (points > 7.5) {
+                backgroundThread.standUp();
+                lbTextStatus.setText("You lost");
+            }
+
+            lbTextStatus.setDisable(false);
+            lbTextStatus.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -108,6 +126,27 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
         }
 
         lbTextStatus.setText("Wait your turn...");
+        lbTextStatus.setDisable(false);
+        lbTextStatus.setVisible(true);
+    }
+
+    @Override
+    public void onResult(String result) {
+        switch (result) {
+            case "draw":
+                lbTextStatus.setText("Draw");
+                break;
+            case "win":
+                lbTextStatus.setText("You Win!");
+                break;
+            case "lose":
+                lbTextStatus.setText("You lose!");
+                break;
+            default:
+                lbTextStatus.setText("Waiting for the players to finish...");
+                break;
+        }
+
         lbTextStatus.setDisable(false);
         lbTextStatus.setVisible(true);
     }

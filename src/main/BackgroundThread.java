@@ -17,6 +17,7 @@ public class BackgroundThread extends Thread {
         void onDisconnectServer();
         void onReceiveCard(Card card);
         void onMyTurn(boolean isMyTurn);
+        void onResult(String result);
     }
 
     private OnBackgroundThreadListener listener;
@@ -25,9 +26,11 @@ public class BackgroundThread extends Thread {
 
     private boolean isMyTurn;
 
+    private boolean isFinished;
+
     private Socket socket;
 
-    private Timer timerTurn;
+    private Timer timer;
 
     private ObjectOutputStream objectOutputStream;
 
@@ -47,7 +50,9 @@ public class BackgroundThread extends Thread {
         try {
             while (keepRunning) {
                 setTimerTurn();
+                setTimerFinished();
                 String message = objectInputStream.readUTF();
+
                 if (isMyTurn && message.equals("receiveMoreCards")) {
                     Card card = (Card) objectInputStream.readObject();
                     Platform.runLater(() -> listener.onReceiveCard(card));
@@ -55,36 +60,75 @@ public class BackgroundThread extends Thread {
                 } else if (message.equals("getTurn")) {
                     isMyTurn = objectInputStream.readBoolean();
                     Platform.runLater(() -> listener.onMyTurn(isMyTurn));
+                } else if (message.equals("standUp")) {
+                    isMyTurn = false;
+                    isFinished = true;
+                    timer = null;
+                } else if (message.equals("getResult")) {
+                    String result = objectInputStream.readUTF();
+                    Platform.runLater(() -> listener.onResult(result));
                 }
 
-                if (isMyTurn && timerTurn != null) {
-                    timerTurn.cancel();
+                if (isMyTurn && timer != null) {
+                    timer.cancel();
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } finally {
             Platform.runLater(() -> listener.onDisconnectServer());
         }
     }
 
     private void setTimerTurn() {
-        if (isMyTurn) {
+        if (timer != null && isMyTurn) {
             return;
         }
 
-        timerTurn = new Timer();
-        timerTurn.schedule(new TimerTask() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if (isFinished) {
+                    return;
+                }
                 try {
                     objectOutputStream.writeUTF("getTurn");
                     objectOutputStream.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
         }, 1000);
+    }
+
+    private void setTimerFinished() {
+        if (timer != null && !isFinished) {
+            return;
+        }
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (isMyTurn) {
+                    return;
+                }
+                try {
+                    objectOutputStream.writeUTF("getResult");
+                    objectOutputStream.flush();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }, 1000);
+    }
+
+    public void standUp() throws IOException {
+        objectOutputStream.writeUTF("standUp");
+        objectOutputStream.flush();
+        isMyTurn = false;
+        isFinished = true;
     }
 
     public void receiveMoreCards() throws IOException {
