@@ -1,14 +1,20 @@
-package sample;
+package main;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import main.card.Card;
 
 import java.io.IOException;
 import java.net.Socket;
 
 public class Controller implements BackgroundThread.OnBackgroundThreadListener  {
+
+    @FXML
+    private Label lbTextStatus;
 
     @FXML
     private TextField txtFieldAddress;
@@ -22,10 +28,18 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
     @FXML
     private HBox gameBox;
 
+    @FXML
+    private ListView<Card> listCards;
+
+    @FXML
+    private Label lbTotalPoints;
+
     private BackgroundThread backgroundThread;
 
     @FXML
     public void initialize() {
+        lbTextStatus.setDisable(true);
+        lbTextStatus.setVisible(false);
         gameBox.setDisable(true);
         gameBox.setVisible(false);
     }
@@ -40,6 +54,16 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
         backgroundThread.doStop();
     }
 
+    @FXML
+    void handleReceiveMoreCards() throws IOException {
+        backgroundThread.receiveMoreCards();
+    }
+
+    @FXML
+    void handleStandUp() {
+
+    }
+
     @Override
     public void onConnectServer(Socket socket) {
         txtFieldAddress.setDisable(true);
@@ -47,6 +71,10 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
         btnConnectOrDisconnect.setText("Disconnect");
         gameBox.setDisable(false);
         gameBox.setVisible(true);
+
+        lbTextStatus.setText("Wait your turn...");
+        lbTextStatus.setDisable(false);
+        lbTextStatus.setVisible(true);
     }
 
     @Override
@@ -57,11 +85,31 @@ public class Controller implements BackgroundThread.OnBackgroundThreadListener  
         btnConnectOrDisconnect.setText("Connect");
         gameBox.setDisable(true);
         gameBox.setVisible(false);
+
+        lbTextStatus.setText(null);
+        lbTextStatus.setDisable(true);
+        lbTextStatus.setVisible(false);
     }
 
     @Override
-    public void onReceiveMessage(String message) {
-        System.out.println(message);
+    public void onReceiveCard(Card card) {
+        listCards.getItems().add(card);
+        float points = Float.parseFloat(lbTotalPoints.getText()) + card.getSymbol().getPoints();
+        lbTotalPoints.setText(String.valueOf(points));
+    }
+
+    @Override
+    public void onMyTurn(boolean isMyTurn) {
+        if (isMyTurn) {
+            lbTextStatus.setText(null);
+            lbTextStatus.setDisable(true);
+            lbTextStatus.setVisible(false);
+            return;
+        }
+
+        lbTextStatus.setText("Wait your turn...");
+        lbTextStatus.setDisable(false);
+        lbTextStatus.setVisible(true);
     }
 
 }

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
       <HBox layoutX="60.0" layoutY="52.0" prefHeight="3.0" prefWidth="560.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
@@ -33,8 +33,8 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Receive more cards" textAlignment="CENTER" wrapText="true" />
-                  <Button alignment="CENTER" maxWidth="100.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Stand up" textAlignment="CENTER" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleReceiveMoreCards" prefHeight="50.0" prefWidth="100.0" text="Receive more cards" textAlignment="CENTER" wrapText="true" />
+                  <Button alignment="CENTER" maxWidth="100.0" mnemonicParsing="false" onAction="#handleStandUp" prefHeight="50.0" prefWidth="100.0" text="Stand up" textAlignment="CENTER" />
                </children>
                <HBox.margin>
                   <Insets bottom="10.0" />
@@ -42,7 +42,7 @@
             </VBox>
             <VBox prefHeight="268.0" prefWidth="300.0" spacing="20.0">
                <children>
-                  <ListView prefHeight="230.0" prefWidth="180.0" />
+                  <ListView fx:id="listCards" prefHeight="230.0" prefWidth="180.0" />
                   <HBox prefHeight="0.0" prefWidth="180.0" spacing="10.0">
                      <children>
                         <Label text="Total">
@@ -50,7 +50,7 @@
                               <Font name="Arial Bold" size="17.0" />
                            </font>
                         </Label>
-                        <Label text="0">
+                        <Label fx:id="lbTotalPoints" text="0">
                            <font>
                               <Font name="Arial" size="17.0" />
                            </font>
@@ -61,5 +61,10 @@
             </VBox>
          </children>
       </HBox>
+      <Label fx:id="lbTextStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="70.0" text="Text" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
